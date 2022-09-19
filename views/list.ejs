@@ -1,21 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>To Do List</title>
-</head>
+  </head>
 
-<body>
-    <% if(kindOfDay==="Saturday" || kindOfDay==="Sunday" ) { %>
-        <h1 style="color: purple">It's a <%= kindOfDay %> ToDo List</h1>
-       <%  } else { %> 
-        <h1 style="color: blue">It's a <%= kindOfDay %> ToDo List</h1>
-       <% } %>
+  <body>
+    <h1><%= kindOfDay %></h1>
+    <ul>
+      <li>hot food</li>
+      <li>eat food</li>
+      <li>buy food</li>
+      <li>get food</li>
 
-        <p>Why are you not working</p>
-</body>
+      <% for (var i = 0; i < newListItems.length; i++) { %>
+      <li><%= newListItems[i] %></li>
+      <% } %>
+    </ul>
 
+    <form action="/" method="post">
+      <input type="text" name="newItem" />
+      <button type="submit" name="button">Add</button>
+    </form>
+  </body>
 </html>
