@@ -6,12 +6,18 @@
     </div>
 
     <div class="box">
+
+        <!-- forEach loop to iterate through it new added item in the DB  -->
         <% newListItems.forEach(function(newListItem){ %>
 
+                <!-- form to run a post request to the /delete route  -->
             <form action="/delete"  method = "post">
 
                 <div class="item">
+                    <!-- checkBox attributes updated to have a value of the item's id, name and submission trigger onChange  -->
                     <input type="checkbox" value="<%= newListItem._id %>" name="checkBox" onChange="this.form.submit()"/>
+                    
+                     <!-- add each new List item's name -->
                     <p>
                         <%= newListItem.name %>
                     </p>
@@ -20,6 +26,8 @@
             </form>
             <% }); %>
 
+
+            <!-- submit text using post request -->
                 <form class="item" action="/" method="post">
                     <input type="text" name="newItem" placeholder="Add New Item" autocomplete="off" />
                     <button type="submit" name="list" value="<%= ListTitle %>">+</button>
