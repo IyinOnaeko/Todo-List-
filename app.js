@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 //require monoose 
 
 const mongoose = require("mongoose");
+const { request } = require("https");
 // console.log(date)
 const app = express();
 
@@ -80,6 +81,11 @@ app.get("/", function (req, res) {
 });
 
 
+app.get("/:customListName", function(req, res) {
+    console.log(request.params.customListName);
+})
+
+
 //post data from the form to the server
 
 app.post("/", function (req, res) {
@@ -116,6 +122,7 @@ app.post("/delete", function (req, res) {
         }
     });
 });
+
 
 
 app.get("/work", function (req, res) {
