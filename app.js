@@ -3,15 +3,29 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const date = require(__dirname + "/date.js");
+
+//require monoose 
+
+const mongoose = require("mongoose");
 // console.log(date)
 const app = express();
 
-let items = ["wake up", "pray", "brush teeth and shower"];
-let workItems = [];
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+
+
+// create a new database inside MongoDB
+mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true});
+
+const itemSchema = {
+    name : {
+        type: String,
+        required: [true, 'Please enter a task you would like to do'] 
+    }
+}
+
 
 app.get("/", function (req, res) {
     const day = date.getDate();
