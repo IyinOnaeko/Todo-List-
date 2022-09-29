@@ -50,11 +50,6 @@ const item3 = new Item({
 const defaultItems = [item1, item2, item3];
 
 
-
-
-
-
-
 //get request 
 app.get("/", function (req, res) {
     // const day = date.getDate();
@@ -88,16 +83,16 @@ app.post("/", function (req, res) {
     // console.log(req.body);
     const item = req.body.newItem;
 
-    if (req.body.list === "Work List") {
+    // if (req.body.list === "Work List") {
 
-        workItems.push(item);
-        res.redirect("/work");
+    //     workItems.push(item);
+    //     res.redirect("/work");
 
-    } else {
+    // } else {
 
-        items.push(item);
-        res.redirect("/");
-    }
+    //     items.push(item);
+    //     res.redirect("/");
+    // }
 
 });
 
