@@ -94,15 +94,15 @@ app.get("/", function (req, res) {
 });
 
 
-app.get("/:customListName", function(req, res) {
+app.get("/:customListName", function (req, res) {
     const customListName = req.params.customListName;
 
     //check using the list model customListName has been created
-    List.findOne({name: customListName}, function(err, foundList){
-        if(!err) {
-            if(!foundList){
+    List.findOne({ name: customListName }, function (err, foundList) {
+        if (!err) {
+            if (!foundList) {
                 //console.log("doesn't Exist"); ? hence create a new list
-                const list = new List ({
+                const list = new List({
                     name: customListName,
                     items: defaultItems
                 });
@@ -110,17 +110,17 @@ app.get("/:customListName", function(req, res) {
                 res.redirect("/" + customListName);
 
             } else {
-               // console.log("exists"); ? show an existing list
+                // console.log("exists"); ? show an existing list
 
-               res.render("list", {ListTitle: foundList.name, newListItems: foundList.items })
+                res.render("list", { ListTitle: foundList.name, newListItems: foundList.items })
             }
         }
     });
 
-    
-   });
 
-  
+});
+
+
 
 //    res.redirect("/:customListName")
 
@@ -130,12 +130,22 @@ app.get("/:customListName", function(req, res) {
 app.post("/", function (req, res) {
     // console.log(req.body);
     const itemName = req.body.newItem;  //store data recieved in const => itemName
-
-
+    const listName = req.body.list;
     //create itemName document 
     const item = new Item({
         name: itemName
-    })
+    });
+
+    if (listName === "Today") {
+        item.save();
+        res.redirect("/");
+    } else {
+        List.findOne({ name: listName }, function (err, foundList) {
+            foundList.items.push();
+            foundList.save();
+            res.redirect("/" + listName)
+        })
+    }
 
     //save item
     item.save();
@@ -152,14 +162,28 @@ app.post("/", function (req, res) {
 app.post("/delete", function (req, res) {
     const checkedItemId = req.body.checkBox; //save value submission when checkbox is clicked
 
-    //delete items when checked is clicked
-    Item.findByIdAndRemove(checkedItemId, function (err) {
-        if (!err) {
-            console.log("successfully deleted item");
-            //redirect to home, make get request to undate to-do list
-            res.redirect("/");
-        }
-    });
+
+    //check value of listName
+    const listName = req.body.listName;
+    if (listName === "Today") {
+        //delete items when checked is clicked
+        Item.findByIdAndRemove(checkedItemId, function (err) {
+            if (!err) {
+                console.log("successfully deleted item");
+                //redirect to home, make get request to undate to-do list
+                res.redirect("/");
+            }
+        });
+    } else {
+        // you can use a filter method or you can use mongoDB's pull function $pull
+         List.findOneAndDelete({name: listName},{$pull: {items: {_id: checkedItemId}}}, function(err, foundList){
+            if(!err) {
+                res.redirect("/" + listName);
+            }
+         })
+    }
+
+
 });
 
 
