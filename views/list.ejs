@@ -1,4 +1,4 @@
-<%- include("header") -%> 
+<%- include("header") -%>
     <div class="box" id="heading">
         <h1>
             <%= ListTitle %>
@@ -6,19 +6,18 @@
     </div>
 
     <div class="box">
-        <% for (var i = 0; i < newListItems.length; i++) { %>
-
+        <% newListItems.forEach(function(newListItem){ %>
             <div class="item">
                 <input type="checkbox" />
                 <p>
-                    <%= newListItems[i] %>
+                    <%= newListItem.name %>
                 </p>
             </div>
+            <% }); %>
 
-            <% } %>
                 <form class="item" action="/" method="post">
-                    <input type="text" name="newItem" placeholder="Add New Item" autocomplete="off"/>
+                    <input type="text" name="newItem" placeholder="Add New Item" autocomplete="off" />
                     <button type="submit" name="list" value="<%= ListTitle %>">+</button>
                 </form>
     </div>
-    <%- include("footer") -%> 
+    <%- include("footer") -%>
