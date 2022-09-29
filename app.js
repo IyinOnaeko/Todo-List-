@@ -79,28 +79,25 @@ app.get("/", function (req, res) {
 
 });
 
+
+//post data from the form to the server
+
 app.post("/", function (req, res) {
     // console.log(req.body);
-    const itemName = req.body.newItem;
+    const itemName = req.body.newItem;  //store data recieved in const => itemName
 
+
+    //create itemName document 
     const item = new Item({
         name : itemName
     })
 
+    //save item
     item.save();
 
+
+    //run get request to view updated list 
     res.redirect();
-
-    // if (req.body.list === "Work List") {
-
-    //     workItems.push(item);
-    //     res.redirect("/work");
-
-    // } else {
-
-    //     items.push(item);
-    //     res.redirect("/");
-    // }
 
 });
 
