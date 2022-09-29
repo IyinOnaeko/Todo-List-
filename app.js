@@ -51,6 +51,19 @@ const item3 = new Item({
 const defaultItems = [item1, item2, item3];
 
 
+//create new list schema
+
+const listSchema = {
+    name: String,
+    items: [itemSchema]
+};
+
+// console.log(listSchema);
+
+//create list from mogoose model
+const List = mongoose.model("List", listSchema);
+
+
 //get request 
 app.get("/", function (req, res) {
     // const day = date.getDate();
@@ -82,8 +95,34 @@ app.get("/", function (req, res) {
 
 
 app.get("/:customListName", function(req, res) {
-    console.log(request.params.customListName);
-})
+    const customListName = req.params.customListName;
+
+    //check using the list model customListName has been created
+    List.findOne({name: customListName}, function(err, foundList){
+        if(!err) {
+            if(!foundList){
+                //console.log("doesn't Exist"); ? hence create a new list
+                const list = new List ({
+                    name: customListName,
+                    items: defaultItems
+                });
+                list.save();
+                res.redirect("/" + customListName);
+
+            } else {
+               // console.log("exists"); ? show an existing list
+
+               res.render("list", {ListTitle: foundList.name, newListItems: foundList.items })
+            }
+        }
+    });
+
+    
+   });
+
+  
+
+//    res.redirect("/:customListName")
 
 
 //post data from the form to the server
@@ -103,7 +142,7 @@ app.post("/", function (req, res) {
 
 
     //run get request to view updated list 
-    res.redirect();
+    res.redirect("/");
 
 });
 
@@ -125,9 +164,9 @@ app.post("/delete", function (req, res) {
 
 
 
-app.get("/work", function (req, res) {
-    res.render("list", { ListTitle: "Work List", newListItems: workItems });
-});
+// app.get("/work", function (req, res) {
+//     res.render("list", { ListTitle: "Work List", newListItems: workItems });
+// });
 
 app.post("/work", function (req, res) {
     let item = req.body.newItem;
