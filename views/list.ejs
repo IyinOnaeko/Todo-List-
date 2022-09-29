@@ -11,7 +11,7 @@
             <form action="/delete"  method = "post">
 
                 <div class="item">
-                    <input type="checkbox" />
+                    <input type="checkbox" value="<%= newListItem._id %>" name="checkBox" onChange="this.form.submit()"/>
                     <p>
                         <%= newListItem.name %>
                     </p>

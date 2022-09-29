@@ -59,7 +59,7 @@ app.get("/", function (req, res) {
         // console.log(foundItems);
 
         if (foundItems.length === 0) {
-        // // use insetMany() to insert into DB
+            // // use insetMany() to insert into DB
 
             Item.insertMany(defaultItems, function (err) {
                 if (err) {
@@ -74,7 +74,7 @@ app.get("/", function (req, res) {
                 ListTitle: "Today", newListItems: foundItems
             });
         }
-       
+
     })
 
 });
@@ -89,7 +89,7 @@ app.post("/", function (req, res) {
 
     //create itemName document 
     const item = new Item({
-        name : itemName
+        name: itemName
     })
 
     //save item
@@ -99,6 +99,22 @@ app.post("/", function (req, res) {
     //run get request to view updated list 
     res.redirect();
 
+});
+
+
+
+//delete data using the checkbox 
+app.post("/delete", function (req, res) {
+    const checkedItemId = req.body.checkBox; //save value submission when checkbox is clicked
+
+    //delete items when checked is clicked
+    Item.findByIdAndRemove(checkedItemId, function (err) {
+        if (!err) {
+            console.log("successfully deleted item");
+            //redirect to home, make get request to undate to-do list
+            res.redirect("/");
+        }
+    });
 });
 
 
