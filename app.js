@@ -17,46 +17,39 @@ app.use(express.static("public"));
 
 
 // create a new database inside MongoDB
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true});
+mongoose.connect("mongodb://localhost:27017/todolistDB", { useNewUrlParser: true });
 
 //create itemSchema
 
 const itemSchema = {
-    name : {
+    name: {
         type: String,
-        required: [true, 'Please enter a task you would like to do'] 
+        required: [true, 'Please enter a task you would like to do']
     }
 }
 
 // create a mongoose model
-const Item =  mongoose.model("Item", itemSchema);
+const Item = mongoose.model("Item", itemSchema);
 
 
 //create new documents in mongoose model
 
-const item1 = new Item ({
-    name : "This is a demo addition, Delete this to add your first list"
+const item1 = new Item({
+    name: "This is a demo addition, Delete this to add your first list"
 })
 
-const item2 = new Item ({
-    name : "Hit the + button to add a new item."
+const item2 = new Item({
+    name: "Hit the + button to add a new item."
 })
 
-const item3 = new Item ({
-    name : "Hit the checkbox to delete an item"
+const item3 = new Item({
+    name: "Hit the checkbox to delete an item"
 })
 
 // add documents to array
 const defaultItems = [item1, item2, item3];
 
-// use insetMany() to insert into DB
-Item.insertMany(defaultItems, function(err){
-    if(err){
-        console.log(err) 
-    } else {
-        console.log("successfully added items to DB");
-    }
-})
+
 
 
 
@@ -67,13 +60,28 @@ app.get("/", function (req, res) {
     // const day = date.getDate();
 
     //find items from the Item Model
-Item.find({}, function(err, foundItems){ //this is to find all items 
-    console.log(foundItems);
-    res.render("list", {
-        ListTitle: "Today", newListItems: foundItems
-    });
-})
-   
+    Item.find({}, function (err, foundItems) { //this is to find all items 
+        // console.log(foundItems);
+
+        if (foundItems.length === 0) {
+        // // use insetMany() to insert into DB
+
+            Item.insertMany(defaultItems, function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("successfully added items to DB");
+                }
+            });
+            res.redirect("/");
+        } else {
+            res.render("list", {
+                ListTitle: "Today", newListItems: foundItems
+            });
+        }
+       
+    })
+
 });
 
 app.post("/", function (req, res) {
