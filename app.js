@@ -20,7 +20,7 @@ app.use(express.static("public"));
 
 
 // create a new database inside MongoDB
-mongoose.connect("mongodb://localhost:27017/todolistDB", { useNewUrlParser: true });
+mongoose.connect("mongodb+srv://admin-john:Test123@cluster0.wlkc1q4.mongodb.net/todolistDB", { useNewUrlParser: true });
 
 //create itemSchema
 
