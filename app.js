@@ -2,12 +2,14 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
+const _ = require("lodash");
 // const date = require(__dirname + "/date.js");
 
 //require monoose 
 
 const mongoose = require("mongoose");
 const { request } = require("https");
+const { lowerFirst } = require("lodash");
 // console.log(date)
 const app = express();
 
@@ -25,7 +27,6 @@ mongoose.connect("mongodb://localhost:27017/todolistDB", { useNewUrlParser: true
 const itemSchema = {
     name: {
         type: String,
-        required: [true, 'Please enter a task you would like to do']
     }
 }
 
@@ -74,8 +75,7 @@ app.get("/", function (req, res) {
 
         if (foundItems.length === 0) {
             // // use insetMany() to insert into DB
-
-            Item.insertMany(defaultItems, function (err) {
+           Item.insertMany(defaultItems, function (err) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -95,7 +95,7 @@ app.get("/", function (req, res) {
 
 
 app.get("/:customListName", function (req, res) {
-    const customListName = req.params.customListName;
+    const customListName = _.capitalize(req.params.customListName);
 
     //check using the list model customListName has been created
     List.findOne({ name: customListName }, function (err, foundList) {
@@ -141,9 +141,15 @@ app.post("/", function (req, res) {
         res.redirect("/");
     } else {
         List.findOne({ name: listName }, function (err, foundList) {
-            foundList.items.push();
-            foundList.save();
-            res.redirect("/" + listName)
+            console.log(foundList);
+            // if (!err) {
+            //     foundList.items.push(item);
+            //     foundList.save();
+            //     res.redirect("/" + listName);
+            // } else {
+            //     console.log("error");
+            // }
+
         })
     }
 
@@ -160,8 +166,8 @@ app.post("/", function (req, res) {
 
 //delete data using the checkbox 
 app.post("/delete", function (req, res) {
-    const checkedItemId = req.body.checkBox; //save value submission when checkbox is clicked
-
+    const checkedItemId = req.body.checkbox; //save value submission when checkbox is clicked
+    console.log(checkedItemId);
 
     //check value of listName
     const listName = req.body.listName;
@@ -176,12 +182,12 @@ app.post("/delete", function (req, res) {
         });
     } else {
         // you can use a filter method or you can use mongoDB's pull function $pull
-         List.findOneAndDelete({name: listName},{$pull: {items: {_id: checkedItemId}}}, function(err, foundList){
-            if(!err) {
+        List.findOneAndUpdate({ name: listName }, { $pull: { items: { _id: checkedItemId } } }, function (err, foundList) {
+            if (!err) {
                 res.redirect("/" + listName);
             }
-         })
-    }
+        })
+    };
 
 
 });
