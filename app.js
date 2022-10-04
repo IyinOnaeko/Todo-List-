@@ -84,6 +84,11 @@ app.get("/", function (req, res) {
             });
             res.redirect("/");
         } else {
+            // const list = new List({
+            //     name: "Today",
+            //     items: foundItems,
+            // });
+            // list.save();
             res.render("list", {
                 ListTitle: "Today", newListItems: foundItems
             });
@@ -141,24 +146,16 @@ app.post("/", function (req, res) {
         res.redirect("/");
     } else {
         List.findOne({ name: listName }, function (err, foundList) {
-            console.log(foundList);
-            // if (!err) {
-            //     foundList.items.push(item);
-            //     foundList.save();
-            //     res.redirect("/" + listName);
-            // } else {
-            //     console.log("error");
-            // }
+            if (!err) {
+                foundList.items.push(item);
+                console.log(foundList);
+                foundList.save();
+                res.redirect("/" + listName);
+    
+            };
 
-        })
+        });
     }
-
-    //save item
-    item.save();
-
-
-    //run get request to view updated list 
-    res.redirect("/");
 
 });
 
@@ -192,18 +189,6 @@ app.post("/delete", function (req, res) {
 
 });
 
-
-
-// app.get("/work", function (req, res) {
-//     res.render("list", { ListTitle: "Work List", newListItems: workItems });
-// });
-
-app.post("/work", function (req, res) {
-    let item = req.body.newItem;
-    workItems.push(item);
-    res.redirect("/work");
-
-})
 
 app.get("/about", function (req, res) {
     res.render("about");
